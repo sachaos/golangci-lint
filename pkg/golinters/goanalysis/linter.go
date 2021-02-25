@@ -228,22 +228,10 @@ func buildIssues(diags []Diagnostic, linterNameBuilder func(diag *Diagnostic) st
 			text = fmt.Sprintf("%s: %s", diag.Analyzer.Name, diag.Message)
 		}
 
-		var suggestedFixes string
-		if len(diag.SuggestedFixes) > 0 {
-			elems := []string{}
-			for _, fix := range diag.SuggestedFixes {
-				elems = append(elems, fix.Message)
-				for _, text := range fix.TextEdits {
-					elems = append(elems, string(text.NewText))
-				}
-			}
-			suggestedFixes = strings.Join(elems, "\n")
-		}
-
 		issues = append(issues, result.Issue{
 			FromLinter:     linterName,
 			Text:           text,
-			SuggestedFixes: suggestedFixes,
+			SuggestedFixes: diag.SuggestedFixes,
 			Pos:            diag.Position,
 			Pkg:            diag.Pkg,
 		})
